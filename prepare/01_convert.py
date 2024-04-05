@@ -29,7 +29,7 @@ for idx, row in merged_df.iterrows():
     with open(image_path, 'wb') as f:
         f.write(image_bytes)
 
-    metadata_entry = {"file_name": image_file_name, "orig_text": row["text"]}
+    metadata_entry = {"file_name": image_file_name, "orig_text": row["text"].removesuffix(", The Simpsons")}
     metadata.append(metadata_entry)
 
 metadata_df = pd.DataFrame(metadata)
