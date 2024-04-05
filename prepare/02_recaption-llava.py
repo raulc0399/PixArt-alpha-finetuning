@@ -1,13 +1,14 @@
 import torch
 from transformers import BitsAndBytesConfig, AutoProcessor, LlavaForConditionalGeneration, LlavaNextProcessor, LlavaNextForConditionalGeneration
 from PIL import Image
+import os
 
 max_new_tokens = 200
 
 this_dir = os.path.dirname(__file__)
 
 train_folder = os.path.join(this_dir, "../../data/train/")
-metadata_file_path = os.path.join(output_folder_path, "metadata.jsonl")
+metadata_file_path = os.path.join(train_folder, "metadata.jsonl")
 
 def get_quantization_config():
     quantization_config = BitsAndBytesConfig(
@@ -17,7 +18,6 @@ def get_quantization_config():
     )
     
     return quantization_config
-
 
 def get_llava_model_and_processor(quantization_config):
     model_id = "llava-hf/llava-1.5-7b-hf"
@@ -50,9 +50,9 @@ def generate_text(model, processor, prompt, image):
 
 
 images = [
-    Image.open("output/0000.png"),
-    Image.open("output/0001.png"),
-    Image.open("output/0002.png")
+    Image.open(os.path.join(train_folder, "0000.png")),
+    Image.open(os.path.join(train_folder, "0001.png")),
+    Image.open(os.path.join(train_folder, "0002.png"))
 ]
 
 quantization_config = get_quantization_config()
