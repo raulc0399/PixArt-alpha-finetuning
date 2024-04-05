@@ -14,8 +14,8 @@ file2_path = os.path.join(datasets_dir, "2.parquet")
 df1 = pd.read_parquet(file1_path)
 df2 = pd.read_parquet(file2_path)
 
-output_folder_path = os.path.join(this_dir, "../../data/train/")
-metadata_file_path = os.path.join(output_folder_path, "metadata.jsonl")
+output_folder = os.path.join(this_dir, "../../data/train/")
+metadata_file_path = os.path.join(output_folder, "metadata.jsonl")
 
 # Merge the two dataframes and save the as HF imagefolder - in fine-tuning, only one text column is needed, but we will save also the text from recaptioning
 merged_df = pd.concat([df1, df2], ignore_index=True)
@@ -23,7 +23,7 @@ merged_df = pd.concat([df1, df2], ignore_index=True)
 metadata = []
 for idx, row in merged_df.iterrows():
     image_file_name = f"{idx:04d}.png"
-    image_path = os.path.join(output_folder_path, image_file_name)
+    image_path = os.path.join(output_folder, image_file_name)
     
     image_bytes = bytearray(row['image']['bytes'])
     with open(image_path, 'wb') as f:
