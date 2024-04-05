@@ -4,6 +4,11 @@ from PIL import Image
 
 max_new_tokens = 200
 
+this_dir = os.path.dirname(__file__)
+
+train_folder = os.path.join(this_dir, "../../data/train/")
+metadata_file_path = os.path.join(output_folder_path, "metadata.jsonl")
+
 def get_quantization_config():
     quantization_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -41,6 +46,8 @@ def generate_text(model, processor, prompt, image):
     output = model.generate(**inputs, max_new_tokens=max_new_tokens)
     
     return processor.decode(output[0], skip_special_tokens=True)
+
+
 
 images = [
     Image.open("output/0000.png"),
