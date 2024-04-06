@@ -61,7 +61,7 @@ def generate_images_captions(df, model, processor, model_prompt, model_name):
 
         # generating caption using the given model and asking it to describe the image
         prompt = model_prompt.format(prompt_for_caption=prompt_for_caption)                
-        caption = generate_text(model, processor, prompt, image)
+        caption = prompt # generate_text(model, processor, prompt, image)
 
         df.at[index, f'{model_name}_caption'] = caption
 
@@ -69,7 +69,7 @@ def generate_images_captions(df, model, processor, model_prompt, model_name):
         orig_caption = row['orig_text']
         prompt_with_orig_caption = prompt_for_caption_with_caption.format(caption=orig_caption)
         prompt = model_prompt.format(prompt_for_caption=prompt_with_orig_caption)
-        caption_with_orig_caption = generate_text(model, processor, prompt, image)
+        caption_with_orig_caption = prompt # generate_text(model, processor, prompt, image)
 
         df.at[index, f'{model_name}_caption_with_orig_caption'] = caption_with_orig_caption
 

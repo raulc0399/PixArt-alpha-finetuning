@@ -4,8 +4,8 @@ import pandas as pd
 import paths
 
 file1_path, file2_path = paths.get_input_files_paths()
-output_folder = paths.get_output_folder()
-metadata_file_path = paths.get_metadata_file_path(output_folder)
+output_folder = paths.get_train_folder()
+metadata_file_path = paths.get_metadata_file_path()
 
 df1 = pd.read_parquet(file1_path)
 df2 = pd.read_parquet(file2_path)
