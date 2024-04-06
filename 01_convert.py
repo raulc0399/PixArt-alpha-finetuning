@@ -1,21 +1,14 @@
 import os
 import pandas as pd
 
-def save_to_jsonl(df, file_path):
-    """Save a DataFrame to a JSONL file."""
-    df.to_json(file_path, orient='records', lines=True)
+import paths
 
-this_dir = os.path.dirname(__file__)
-
-datasets_dir = os.path.join(this_dir, "../../data/input/")
-file1_path = os.path.join(datasets_dir, "1.parquet")
-file2_path = os.path.join(datasets_dir, "2.parquet")
+file1_path, file2_path = paths.get_input_files_paths()
+output_folder = paths.get_output_folder()
+metadata_file_path = paths.get_metadata_file_path(output_folder)
 
 df1 = pd.read_parquet(file1_path)
 df2 = pd.read_parquet(file2_path)
-
-output_folder = os.path.join(this_dir, "../../data/train/")
-metadata_file_path = os.path.join(output_folder, "metadata.jsonl")
 
 # Merge the two dataframes and save the as HF imagefolder - in fine-tuning, only one text column is needed, but we will save also the text from recaptioning
 merged_df = pd.concat([df1, df2], ignore_index=True)
@@ -33,4 +26,4 @@ for idx, row in merged_df.iterrows():
     metadata.append(metadata_entry)
 
 metadata_df = pd.DataFrame(metadata)
-save_to_jsonl(metadata_df, metadata_file_path)
+metadata_df.to_json(metadata_file_path, orient='records', lines=True)
