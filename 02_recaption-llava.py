@@ -2,13 +2,17 @@ import torch
 from transformers import BitsAndBytesConfig, AutoProcessor, LlavaForConditionalGeneration, LlavaNextProcessor, LlavaNextForConditionalGeneration
 from PIL import Image
 import os
+import pandas as pd
+import paths
 
 max_new_tokens = 200
 
-this_dir = os.path.dirname(__file__)
+train_folder = paths.get_train_folder()
+metadata_file_path = paths.get_metadata_file_path()
 
-train_folder = os.path.join(this_dir, "../../data/train/")
-metadata_file_path = os.path.join(train_folder, "metadata.jsonl")
+# https://arxiv.org/pdf/2310.00426.pdf, Fig. 10
+prompt_for_caption = "Describe this image and its style in a very detailed manner"
+prompt_for_caption_with_caption = "Give the caption of this image {caption}, describe this image and its style in a very detailed manner"
 
 def get_quantization_config():
     quantization_config = BitsAndBytesConfig(
@@ -26,9 +30,9 @@ def get_llava_model_and_processor(quantization_config):
     model = LlavaForConditionalGeneration.from_pretrained(model_id, quantization_config=quantization_config)
 
     # as per https://huggingface.co/docs/transformers/main/en/model_doc/llava#usage-tips
-    prompt = "USER: <image>\nDescribe this image and its style in a very detailed manner\nASSISTANT:"
+    model_prompt = "USER: <image>\n{prompt_for_caption}\nASSISTANT:"
     
-    return model, processor, prompt
+    return model, processor, model_prompt
 
 def get_llava_next_model_and_processor(quantization_config):
     model_id = "llava-hf/llava-v1.6-mistral-7b-hf"
@@ -37,9 +41,9 @@ def get_llava_next_model_and_processor(quantization_config):
     model = LlavaNextForConditionalGeneration.from_pretrained(model_id, quantization_config=quantization_config) 
 
     # as per https://huggingface.co/docs/transformers/main/en/model_doc/llava_next#usage-tips
-    prompt = "[INST] <image>\nDescribe this image and its style in a very detailed manner [/INST]"
+    model_prompt = "[INST] <image>\n{prompt_for_caption} [/INST]"
     
-    return model, processor, prompt
+    return model, processor, model_prompt
 
 def generate_text(model, processor, prompt, image):
     inputs = processor(prompt, image, return_tensors="pt").to("cuda:0")
@@ -47,29 +51,44 @@ def generate_text(model, processor, prompt, image):
     
     return processor.decode(output[0], skip_special_tokens=True)
 
+def generate_images_captions(df, model, processor, model_prompt, model_name):
+    length = len(df)
+    for index, row in df.iterrows():
+        print(f"Processing {index}/{length}")
 
+        image_path = os.path.join(train_folder, row['file_name'])
+        image = Image.open(image_path)
 
-images = [
-    Image.open(os.path.join(train_folder, "0000.png")),
-    Image.open(os.path.join(train_folder, "0001.png")),
-    Image.open(os.path.join(train_folder, "0002.png"))
-]
+        # generating caption using the given model and asking it to describe the image
+        prompt = model_prompt.format(prompt_for_caption=prompt_for_caption)                
+        caption = generate_text(model, processor, prompt, image)
 
-quantization_config = get_quantization_config()
+        df.at[index, f'{model_name}_caption'] = caption
 
-llava_model, llava_processor, prompt = get_llava_model_and_processor(quantization_config)
+        # generating caption using the given model and asking it to describe the image, also including the original caption
+        orig_caption = row['orig_text']
+        prompt_with_orig_caption = prompt_for_caption_with_caption.format(caption=orig_caption)
+        prompt = model_prompt.format(prompt_for_caption=prompt_with_orig_caption)
+        caption_with_orig_caption = generate_text(model, processor, prompt, image)
 
-print("Llava Model")
-for image in images:
-    print(generate_text(llava_model, llava_processor, prompt, image))
-    print("---------------------------------------------------")
+        df.at[index, f'{model_name}_caption_with_orig_caption'] = caption_with_orig_caption
 
-del llava_model, llava_processor
+        if index % 20 == 0:
+            df.to_json(metadata_file_path, orient='records', lines=True)
 
-llava_next_model, llava_next_processor, prompt = get_llava_next_model_and_processor(quantization_config)
+    df.to_json(metadata_file_path, orient='records', lines=True)
+        
+if __name__ == "__main__":
+    metadata_df = pd.read_json(path_or_buf=metadata_file_path, lines=True)
 
-print("Llava Next Model")
+    quantization_config = get_quantization_config()
 
-for image in images:
-    print(generate_text(llava_next_model, llava_next_processor, prompt, image))
-    print("---------------------------------------------------")
+    print("generating captions with llava")
+    llava_model, llava_processor, lava_model_prompt = get_llava_model_and_processor(quantization_config)
+    generate_images_captions(metadata_df, llava_model, llava_processor, lava_model_prompt, 'llava')
+
+    del llava_model, llava_processor, lava_model_prompt
+
+    print("generating captions with llava next")
+    llava_next_model, llava_next_processor, llava_next_prompt = get_llava_next_model_and_processor(quantization_config)
+    generate_images_captions(metadata_df, llava_next_model, llava_next_processor, llava_next_prompt, 'llava_next')
