@@ -12,7 +12,7 @@ metadata_file_path = paths.get_metadata_file_path()
 
 # https://arxiv.org/pdf/2310.00426.pdf, Fig. 10
 prompt_for_caption = "Describe this image and its style in a very detailed manner"
-prompt_for_caption_with_caption = "Give the caption of this image {caption}, describe this image and its style in a very detailed manner"
+prompt_for_caption_with_caption = "Give the caption of this image '{caption}', describe this image and its style in a very detailed manner"
 
 def get_quantization_config():
     quantization_config = BitsAndBytesConfig(
