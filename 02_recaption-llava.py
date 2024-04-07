@@ -51,6 +51,19 @@ def generate_text(model, processor, prompt, image):
     
     return processor.decode(output[0], skip_special_tokens=True)
 
+def save_generation_info(index, prompt1, prompt2, orig_caption, caption, caption_with_orig_caption, model_name):
+    output_file_path = f"output_{model_name}_{index}.txt"
+    with open(output_file_path, "w") as f:
+        f.write(f"---------------------------: {index}\n")
+        f.write(f"Original Caption: {orig_caption}\n")
+
+        f.write(f"Prompt: {prompt1}\n")
+        f.write(f"\tCaption: {caption}\n")
+        
+        f.write(f"Prompt: {prompt2}\n")
+        f.write(f"\tCaption with Original Caption: {caption_with_orig_caption}\n\n")
+
+
 def generate_images_captions(df, model, processor, model_prompt, model_name):
     length = len(df)
     for index, row in df.iterrows():
@@ -60,18 +73,21 @@ def generate_images_captions(df, model, processor, model_prompt, model_name):
         image = Image.open(image_path)
 
         # generating caption using the given model and asking it to describe the image
-        prompt = model_prompt.format(prompt_for_caption=prompt_for_caption)                
-        caption = prompt # generate_text(model, processor, prompt, image)
+        prompt1 = model_prompt.format(prompt_for_caption=prompt_for_caption)                
+        caption = generate_text(model, processor, prompt1, image)
 
         df.at[index, f'{model_name}_caption'] = caption
 
         # generating caption using the given model and asking it to describe the image, also including the original caption
         orig_caption = row['orig_text']
         prompt_with_orig_caption = prompt_for_caption_with_caption.format(caption=orig_caption)
-        prompt = model_prompt.format(prompt_for_caption=prompt_with_orig_caption)
-        caption_with_orig_caption = prompt # generate_text(model, processor, prompt, image)
+        prompt2 = model_prompt.format(prompt_for_caption=prompt_with_orig_caption)
+        caption_with_orig_caption = generate_text(model, processor, prompt2, image)
 
         df.at[index, f'{model_name}_caption_with_orig_caption'] = caption_with_orig_caption
+
+        if index < 10:
+            save_generation_info(index, prompt1, prompt2, orig_caption, caption, caption_with_orig_caption, model_name)                
 
         if index % 20 == 0:
             df.to_json(metadata_file_path, orient='records', lines=True)
