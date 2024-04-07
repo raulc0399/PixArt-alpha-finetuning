@@ -9,5 +9,6 @@ diffusers[torch]
 sentencepiece
 beautifulsoup4
 peft
---extra-index-url https://download.pytorch.org/whl/cu121
+# on Windows uncomment
+# --extra-index-url https://download.pytorch.org/whl/cu121
 torch
