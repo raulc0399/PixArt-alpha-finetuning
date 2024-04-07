@@ -52,13 +52,17 @@ def generate_text(model, processor, prompt, image):
     return processor.decode(output[0], skip_special_tokens=True)
 
 def save_generation_info(index, prompt1, prompt2, orig_caption, caption, caption_with_orig_caption, model_name):
-    output_file_path = f"output_{model_name}_{index}.txt"
+    output_folder = "./check"
+    os.makedirs(output_folder)
+
+    output_file_path = f"./{output_folder}/output_{model_name}_{index}.txt"
+
     with open(output_file_path, "w") as f:
         f.write(f"---------------------------: {index}\n")
-        f.write(f"Original Caption: {orig_caption}\n")
+        f.write(f"Original Caption: {orig_caption}\n\n")
 
         f.write(f"Prompt: {prompt1}\n")
-        f.write(f"\tCaption: {caption}\n")
+        f.write(f"\tCaption: {caption}\n\n")
         
         f.write(f"Prompt: {prompt2}\n")
         f.write(f"\tCaption with Original Caption: {caption_with_orig_caption}\n\n")
