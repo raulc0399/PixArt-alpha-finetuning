@@ -11,7 +11,7 @@
 
 accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train_scripts/train_pixart_lora_hf.py --mixed_precision="fp16" \
   --pretrained_model_name_or_path=PixArt-alpha/PixArt-XL-2-512x512 \
-  --train_dir="../data/train/" --caption_column="llava_caption_with_orig_caption" \
+  --train_data_dir="../data/train/" --caption_column="llava_caption_with_orig_caption" \
   --resolution=512 --random_flip \
   --train_batch_size=16 \
   --num_train_epochs=200 --checkpointing_steps=100 \
