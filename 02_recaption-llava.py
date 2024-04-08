@@ -18,7 +18,7 @@ def get_quantization_config():
     quantization_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.float16,
+        bnb_4bit_compute_dtype=torch.float16
     )
     
     return quantization_config
@@ -28,7 +28,7 @@ def get_llava_model_and_processor(quantization_config):
 
     processor = AutoProcessor.from_pretrained(model_id)
     model = LlavaForConditionalGeneration.from_pretrained(model_id, quantization_config=quantization_config)
-
+    
     # as per https://huggingface.co/docs/transformers/main/en/model_doc/llava#usage-tips
     model_prompt = "USER: <image>\n{prompt_for_caption}\nASSISTANT:"
     
@@ -36,10 +36,10 @@ def get_llava_model_and_processor(quantization_config):
 
 def get_llava_next_model_and_processor(quantization_config):
     model_id = "llava-hf/llava-v1.6-mistral-7b-hf"
-
+    
     processor = LlavaNextProcessor.from_pretrained(model_id)
-    model = LlavaNextForConditionalGeneration.from_pretrained(model_id, quantization_config=quantization_config) 
-
+    model = LlavaNextForConditionalGeneration.from_pretrained(model_id, quantization_config=quantization_config)
+    
     # as per https://huggingface.co/docs/transformers/main/en/model_doc/llava_next#usage-tips
     model_prompt = "[INST] <image>\n{prompt_for_caption} [/INST]"
     
@@ -53,7 +53,8 @@ def generate_text(model, processor, prompt, image):
 
 def save_generation_info(index, prompt1, prompt2, orig_caption, caption, caption_with_orig_caption, model_name):
     output_folder = "./check"
-    os.makedirs(output_folder)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
     output_file_path = f"./{output_folder}/output_{model_name}_{index}.txt"
 
