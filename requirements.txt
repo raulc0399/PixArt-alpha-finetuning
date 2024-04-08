@@ -12,3 +12,5 @@ peft
 # on Windows uncomment
 # --extra-index-url https://download.pytorch.org/whl/cu121
 torch
+torchvision
+datasets
