@@ -80,6 +80,8 @@ def generate_images_captions(df, model, processor, model_prompt, model_name):
         # ignoring, use only the prompt with existing caption - generating caption using the given model and asking it to describe the image
         # prompt1 = model_prompt.format(prompt_for_caption=prompt_for_caption)                
         # caption = generate_text(model, processor, prompt1, image)
+        prompt1 = ""
+        caption = ""
 
         # df.at[index, f'{model_name}_caption'] = caption
 
