@@ -2,12 +2,13 @@ import torch
 from diffusers import PixArtAlphaPipeline, ConsistencyDecoderVAE, AutoencoderKL
 import datetime
 import json
+import os
 
 # You can replace the checkpoint id with "PixArt-alpha/PixArt-XL-2-512x512" too.
 MODEL_ID = "PixArt-alpha/PixArt-XL-2-512x512"
 # MODEL_ID = "PixArt-alpha/PixArt-XL-2-1024-MS"
 
-pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, torch_dtype=torch.float16, use_safetensors=True)
+pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, torch_dtype=torch.float16, use_safetensors=True, device_map="auto")
 
 # If use DALL-E 3 Consistency Decoder
 # pipe.vae = ConsistencyDecoderVAE.from_pretrained("openai/consistency-decoder", torch_dtype=torch.float16)
@@ -21,9 +22,6 @@ pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, torch_dtype=torch.float16, 
 # transformer = PeftModel.from_pretrained(transformer, "Your-LoRA-Model-Path")
 # pipe = PixArtAlphaPipeline.from_pretrained("PixArt-alpha/PixArt-LCM-XL-2-1024-MS", transformer=transformer, torch_dtype=torch.float16, use_safetensors=True)
 # del transformer
-
-# Enable memory optimizations.
-pipe.enable_model_cpu_offload()
 
 prompts = [
     "A small cactus with a happy face in the Sahara desert.",
@@ -40,11 +38,15 @@ prompts = [
     "A musician playing a guitar on stage at a rock concert. The crowd is cheering and waving their hands in the air, with lights flashing and a disco ball spinning overhead. The musician is passionately performing a solo, lost in the music.",
 ]
 
+output_dir = "./generated/"
+if not os.path.exists(output_dir):
+    os.mkdir(output_dir)
+
 current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 for i, prompt in enumerate(prompts):
     image = pipe(prompt).images[0]    
 
-    file_name = f"./generated/img_{i}_{current_time}"
+    file_name = os.path.join(output_dir, f"img_{i}_{current_time}")
 
     info_json = {
         "prompt": prompt,
