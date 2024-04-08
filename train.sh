@@ -3,6 +3,12 @@
 # clone original repo and then run the training script
 # git clone https://github.com/PixArt-alpha/PixArt-alpha.git
 
+# also run
+# accelerate config
+
+# check with
+# accelerate env
+
 accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train_scripts/train_pixart_lora_hf.py --mixed_precision="fp16" \
   --pretrained_model_name_or_path=PixArt-alpha/PixArt-XL-2-512x512 \
   --train_dir="../data/train/" --caption_column="llava_caption_with_orig_caption" \
