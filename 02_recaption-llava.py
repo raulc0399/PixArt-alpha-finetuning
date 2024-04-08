@@ -77,11 +77,11 @@ def generate_images_captions(df, model, processor, model_prompt, model_name):
         image_path = os.path.join(train_folder, row['file_name'])
         image = Image.open(image_path)
 
-        # generating caption using the given model and asking it to describe the image
-        prompt1 = model_prompt.format(prompt_for_caption=prompt_for_caption)                
-        caption = generate_text(model, processor, prompt1, image)
+        # ignoring, use only the prompt with existing caption - generating caption using the given model and asking it to describe the image
+        # prompt1 = model_prompt.format(prompt_for_caption=prompt_for_caption)                
+        # caption = generate_text(model, processor, prompt1, image)
 
-        df.at[index, f'{model_name}_caption'] = caption
+        # df.at[index, f'{model_name}_caption'] = caption
 
         # generating caption using the given model and asking it to describe the image, also including the original caption
         orig_caption = row['orig_text']
