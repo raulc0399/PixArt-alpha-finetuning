@@ -31,8 +31,9 @@ def get_llava_model_and_processor(quantization_config):
     
     # as per https://huggingface.co/docs/transformers/main/en/model_doc/llava#usage-tips
     model_prompt = "USER: <image>\n{prompt_for_caption}\nASSISTANT:"
+    model_eop = "ASSISTANT:"
     
-    return model, processor, model_prompt
+    return model, processor, model_prompt, model_eop
 
 def get_llava_next_model_and_processor(quantization_config):
     model_id = "llava-hf/llava-v1.6-mistral-7b-hf"
@@ -42,8 +43,9 @@ def get_llava_next_model_and_processor(quantization_config):
     
     # as per https://huggingface.co/docs/transformers/main/en/model_doc/llava_next#usage-tips
     model_prompt = "[INST] <image>\n{prompt_for_caption} [/INST]"
+    model_eop = "[/INST]"
     
-    return model, processor, model_prompt
+    return model, processor, model_prompt, model_eop
 
 def generate_text(model, processor, prompt, image):
     inputs = processor(prompt, image, return_tensors="pt").to("cuda:0")
@@ -69,7 +71,7 @@ def save_generation_info(index, prompt1, prompt2, orig_caption, caption, caption
         f.write(f"\tCaption with Original Caption: {caption_with_orig_caption}\n\n")
 
 
-def generate_images_captions(df, model, processor, model_prompt, model_name):
+def generate_images_captions(df, model, processor, model_prompt, model_eop, model_name):
     length = len(df)
     for index, row in df.iterrows():
         print(f"Processing {index}/{length}")
@@ -91,7 +93,9 @@ def generate_images_captions(df, model, processor, model_prompt, model_name):
         prompt2 = model_prompt.format(prompt_for_caption=prompt_with_orig_caption)
         caption_with_orig_caption = generate_text(model, processor, prompt2, image)
 
-        df.at[index, f'{model_name}_caption_with_orig_caption'] = caption_with_orig_caption
+        only_caption = caption_with_orig_caption.split(model_eop)[-1].strip()
+        
+        df.at[index, f'{model_name}_caption_with_orig_caption'] = only_caption
 
         if index < 10:
             save_generation_info(index, prompt1, prompt2, orig_caption, caption, caption_with_orig_caption, model_name)                
@@ -107,11 +111,11 @@ if __name__ == "__main__":
     quantization_config = get_quantization_config()
 
     print("generating captions with llava")
-    llava_model, llava_processor, lava_model_prompt = get_llava_model_and_processor(quantization_config)
-    generate_images_captions(metadata_df, llava_model, llava_processor, lava_model_prompt, 'llava')
+    llava_model, llava_processor, llava_model_prompt, llava_model_eop = get_llava_model_and_processor(quantization_config)
+    generate_images_captions(metadata_df, llava_model, llava_processor, llava_model_prompt, llava_model_eop, 'llava')
 
-    del llava_model, llava_processor, lava_model_prompt
+    del llava_model, llava_processor, llava_model_prompt, llava_model_eop
 
-    print("generating captions with llava next")
-    llava_next_model, llava_next_processor, llava_next_prompt = get_llava_next_model_and_processor(quantization_config)
-    generate_images_captions(metadata_df, llava_next_model, llava_next_processor, llava_next_prompt, 'llava_next')
+    print("\ngenerating captions with llava next")
+    llava_next_model, llava_next_processor, llava_next_prompt, llava_next_model_eop = get_llava_next_model_and_processor(quantization_config)
+    generate_images_captions(metadata_df, llava_next_model, llava_next_processor, llava_next_prompt, llava_next_model_eop, 'llava_next')
