@@ -11,7 +11,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --num_train_epochs=200 --checkpointing_steps=100 \
   --learning_rate=1e-06 --lr_scheduler="constant" --lr_warmup_steps=0 \
   --seed=42 \
-  --output_dir="pixart-pokemon-model" \
+  --output_dir="pixart-simpson-model" \
   --validation_prompt="cute dragon creature" --report_to="tensorboard" \
   --gradient_checkpointing --checkpoints_total_limit=10 --validation_epochs=5 \
   --rank=16 \
