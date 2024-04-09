@@ -23,7 +23,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --resolution=512 --random_flip \
   --train_batch_size=4 --gradient_accumulation_steps=4 \
   --num_train_epochs=4 --checkpointing_steps=25 \
-  --learning_rate=1e-5 --lr_scheduler="constant" --lr_warmup_steps=0 \
+  --learning_rate=1e-5 --lr_scheduler="cosine" --lr_warmup_steps=0 \
   --seed=42 \
   --output_dir="pixart-simpson-model" \
   --report_to="tensorboard" \
@@ -57,3 +57,4 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
 # 1. 1e-06, constant
 # 2. 1e-06, linear
 # 3. 1e-05, constant https://keras.io/examples/generative/finetune_stable_diffusion/#initialize-the-trainer-and-compile-it
+# 4. 1e-05, cosine
