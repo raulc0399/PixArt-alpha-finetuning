@@ -32,14 +32,26 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --validation_prompt="cute dragon creature" \
   --rank=16
 
-# to try
+# https://ngwaifoong92.medium.com/how-to-fine-tune-stable-diffusion-using-lora-85690292c6a8
+# https://huggingface.co/docs/diffusers/v0.27.2/en/training/text2image
+# https://huggingface.co/docs/diffusers/v0.27.2/en/training/sdxl
+# https://huggingface.co/docs/diffusers/training/lora
+# https://github.com/bmaltais/kohya_ss/wiki/LoRA-training-parameters
+
+# to try:
+# epochs
 # lora layers
 # rank
-# learning rate: 1e-06, 1e-05
-# lr_scheduler: constant, linear
+# learning rate: 1e-06, 1e-05, 1e-04
+# lr_scheduler: constant, linear, cosine
 # lr_warmup_steps
-# resolution
+# resolution - 256, 300
 # gradient clipping
+# orig_text column
+# scale_lr
+# use_dora=True https://github.com/huggingface/peft/releases/tag/v0.9.0
+# proportion_empty_prompts
+# lora_dropout
 
 # tries
 # 1. 1e-06, constant

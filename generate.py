@@ -68,11 +68,12 @@ def generate_images(pipe, prefix):
         image.save(f"{file_name}.png")
 
 if __name__ == "__main__":
-    pipe = get_default_pipeline()
-    generate_images(pipe, "default")
+    if False:
+        pipe = get_default_pipeline()
+        generate_images(pipe, "default")
 
-    del pipe
-    torch.cuda.empty_cache()
+        del pipe
+        torch.cuda.empty_cache()
 
     pipe = get_lora_pipeline()
     generate_images(pipe, "lora")
