@@ -25,3 +25,12 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --validation_epochs=1000 \
   --validation_prompt="cute dragon creature" \
   --rank=16
+
+# to try
+# lora layers
+# rank
+# learning rate
+# lr_scheduler
+# lr_warmup_steps
+# resolution
+# gradient clipping
