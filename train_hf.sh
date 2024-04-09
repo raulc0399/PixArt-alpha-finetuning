@@ -14,7 +14,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --train_data_dir="../data/train/" --caption_column="llava_caption_with_orig_caption" \
   --resolution=512 --random_flip \
   --train_batch_size=4 --gradient_accumulation_steps=4 \
-  --num_train_epochs=4 --checkpointing_steps=10 \
+  --num_train_epochs=4 --checkpointing_steps=25 \
   --learning_rate=1e-06 --lr_scheduler="constant" --lr_warmup_steps=0 \
   --seed=42 \
   --output_dir="pixart-simpson-model" \
