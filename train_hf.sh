@@ -3,7 +3,8 @@
 # clone original repo and then run the training script
 # git clone https://github.com/PixArt-alpha/PixArt-alpha.git
 
-# to make it run on smaller GPUs - also the training of the transformers gives an error if using fp16:
+# the patch loads the vae and tokenizer directly in fp16 on GPU - also the training of the transformers gives an error if using fp16, so that is removed
+# to apply the patch:
 # cp train_pixart_lora_hf.patch PixArt-alpha
 # cd PixArt-alpha
 # git apply train_pixart_lora_hf.patch
