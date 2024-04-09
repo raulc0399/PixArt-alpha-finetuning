@@ -3,6 +3,11 @@
 # clone original repo and then run the training script
 # git clone https://github.com/PixArt-alpha/PixArt-alpha.git
 
+# to make it run on smaller GPUs - also the training of the transformers gives an error if using fp16:
+# cp train_pixart_lora_hf.patch PixArt-alpha
+# cd PixArt-alpha
+# git apply train_pixart_lora_hf.patch
+
 # also run
 # accelerate config
 
