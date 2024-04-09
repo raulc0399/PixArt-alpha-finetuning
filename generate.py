@@ -29,7 +29,7 @@ def get_default_pipeline():
 def get_lora_pipeline():
     transformer = Transformer2DModel.from_pretrained(MODEL_ID, subfolder="transformer", torch_dtype=torch.float16, device_map="auto")
     transformer = PeftModel.from_pretrained(transformer, paths.get_peft_folder(), device_map="auto")
-    pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, transformer=transformer, torch_dtype=torch.float16, use_safetensors=True, device_map="auto")
+    pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, transformer=transformer, torch_dtype=torch.float16, device_map="auto")
 
     del transformer
     torch.cuda.empty_cache()
