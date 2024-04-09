@@ -46,6 +46,10 @@ def generate_images(pipe, prefix):
         "A classroom scene with a teacher and students. The teacher is standing in front of a blackboard, explaining a complex math problem, while the students are listening intently, some scratching their heads and others taking notes.",
         "A musician playing a guitar on stage at a rock concert. The crowd is cheering and waving their hands in the air, with lights flashing and a disco ball spinning overhead. The musician is passionately performing a solo, lost in the music.",
         "cartoon-like illustration of a crowd of people at a concert"
+
+        # from the training set:
+        # "The image is a cartoon depiction of the Simpsons family, consisting of Homer, Marge, Bart, and Lisa. They are walking through a park, enjoying a day outdoors.",
+        # "The image is a cartoon-style drawing of a man wearing a tie and holding a cup. He is standing in front of a suitcase, which is open and has papers inside. The man appears to be a character from the popular animated show \"The Simpsons.\" The scene is set in a dark room, with the man being the main focus of the image."
     ]
 
     output_dir = "./generated/"
