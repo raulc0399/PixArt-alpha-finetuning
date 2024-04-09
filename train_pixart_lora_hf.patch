@@ -1,7 +1,16 @@
 diff --git a/train_scripts/train_pixart_lora_hf.py b/train_scripts/train_pixart_lora_hf.py
-index 96acf29..1618992 100644
+index 96acf29..1e7d73a 100644
 --- a/train_scripts/train_pixart_lora_hf.py
 +++ b/train_scripts/train_pixart_lora_hf.py
+@@ -40,7 +40,7 @@ from torchvision import transforms
+ from tqdm.auto import tqdm
+ 
+ import diffusers
+-from diffusers import AutoencoderKL, DDPMScheduler, DiffusionPipeline, StableDiffusionPipeline, PixArtAlphaPipeline, Transformer2DModel
++from diffusers import AutoencoderKL, DDPMScheduler, StableDiffusionPipeline, PixArtAlphaPipeline, Transformer2DModel
+ from transformers import T5EncoderModel, T5Tokenizer
+ from diffusers.optimization import get_scheduler
+ from diffusers.training_utils import compute_snr
 @@ -465,15 +465,23 @@ def main():
      # See Section 3.1. of the paper.
      max_length = 120
@@ -56,7 +65,7 @@ index 96acf29..1618992 100644
      vae.to(accelerator.device, dtype=weight_dtype)
      text_encoder.to(accelerator.device, dtype=weight_dtype)
  
-@@ -907,7 +916,7 @@ def main():
+@@ -907,16 +916,15 @@ def main():
                  break
  
          if accelerator.is_main_process:
@@ -65,11 +74,22 @@ index 96acf29..1618992 100644
                  logger.info(
                      f"Running validation... \n Generating {args.num_validation_images} images with prompt:"
                      f" {args.validation_prompt}."
-@@ -916,7 +925,6 @@ def main():
-                 pipeline = DiffusionPipeline.from_pretrained(
+                 )
+                 # create pipeline
+-                pipeline = DiffusionPipeline.from_pretrained(
++                pipeline = PixArtAlphaPipeline.from_pretrained(
                      args.pretrained_model_name_or_path,
                      transformer=accelerator.unwrap_model(transformer, keep_fp32_wrapper=False),
 -                    torch_dtype=weight_dtype,
                  )
                  pipeline = pipeline.to(accelerator.device)
                  pipeline.set_progress_bar_config(disable=True)
+@@ -972,7 +980,7 @@ def main():
+     # load lora weight
+     transformer = PeftModel.from_pretrained(transformer, args.output_dir)
+     # Load previous pipeline
+-    pipeline = DiffusionPipeline.from_pretrained(args.pretrained_model_name_or_path, transformer=transformer, text_encoder=text_encoder, vae=vae, torch_dtype=weight_dtype,)
++    pipeline = PixArtAlphaPipeline.from_pretrained(args.pretrained_model_name_or_path, transformer=transformer, text_encoder=text_encoder, vae=vae, torch_dtype=weight_dtype,)
+     pipeline = pipeline.to(accelerator.device)
+ 
+     del transformer
