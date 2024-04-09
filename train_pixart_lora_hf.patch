@@ -1,5 +1,5 @@
 diff --git a/train_scripts/train_pixart_lora_hf.py b/train_scripts/train_pixart_lora_hf.py
-index 96acf29..1618992 100644
+index 96acf29..32373ee 100644
 --- a/train_scripts/train_pixart_lora_hf.py
 +++ b/train_scripts/train_pixart_lora_hf.py
 @@ -465,15 +465,23 @@ def main():
@@ -61,7 +61,7 @@ index 96acf29..1618992 100644
  
          if accelerator.is_main_process:
 -            if args.validation_prompt is not None and epoch % args.validation_epochs == 0:
-+            if args.validation_prompt is not None and epoch > 0 and epoch % args.validation_epochs == 0:
++            if args.validation_prompt is not None and (epoch + 1) % args.validation_epochs == 0:
                  logger.info(
                      f"Running validation... \n Generating {args.num_validation_images} images with prompt:"
                      f" {args.validation_prompt}."
@@ -73,3 +73,82 @@ index 96acf29..1618992 100644
                  )
                  pipeline = pipeline.to(accelerator.device)
                  pipeline.set_progress_bar_config(disable=True)
+@@ -966,42 +974,44 @@ def main():
+                 ignore_patterns=["step_*", "epoch_*"],
+             )
+ 
+-    # Final inference
+-    # Load previous transformer
+-    transformer = Transformer2DModel.from_pretrained(args.pretrained_model_name_or_path, subfolder='transformer', torch_dtype=weight_dtype)
+-    # load lora weight
+-    transformer = PeftModel.from_pretrained(transformer, args.output_dir)
+-    # Load previous pipeline
+-    pipeline = DiffusionPipeline.from_pretrained(args.pretrained_model_name_or_path, transformer=transformer, text_encoder=text_encoder, vae=vae, torch_dtype=weight_dtype,)
+-    pipeline = pipeline.to(accelerator.device)
+-
+-    del transformer
+-    torch.cuda.empty_cache()
+-
+     # run inference
+-    generator = torch.Generator(device=accelerator.device)
+-    if args.seed is not None:
+-        generator = generator.manual_seed(args.seed)
+-    images = []
+-    with torch.autocast("cuda", dtype=weight_dtype):
+-        for _ in range(args.num_validation_images):
+-            images.append(pipeline(args.validation_prompt, num_inference_steps=20, generator=generator).images[0])
++    if args.validation_prompt is not None:
++        # Final inference
++        # Load previous transformer
++        transformer = Transformer2DModel.from_pretrained(args.pretrained_model_name_or_path, subfolder='transformer', torch_dtype=weight_dtype)
++        # load lora weight
++        transformer = PeftModel.from_pretrained(transformer, args.output_dir)
++        # Load previous pipeline
++        pipeline = DiffusionPipeline.from_pretrained(args.pretrained_model_name_or_path, transformer=transformer, text_encoder=text_encoder, vae=vae, torch_dtype=weight_dtype,)
++        pipeline = pipeline.to(accelerator.device)
++
++        del transformer
++        torch.cuda.empty_cache()
++
++        # run inference
++        generator = torch.Generator(device=accelerator.device)
++        if args.seed is not None:
++            generator = generator.manual_seed(args.seed)
++        images = []
++        with torch.autocast("cuda", dtype=weight_dtype):
++            for _ in range(args.num_validation_images):
++                images.append(pipeline(args.validation_prompt, num_inference_steps=20, generator=generator).images[0])
+ 
+-    if accelerator.is_main_process:
+-        for tracker in accelerator.trackers:
+-            if len(images) != 0:
+-                if tracker.name == "tensorboard":
+-                    np_images = np.stack([np.asarray(img) for img in images])
+-                    tracker.writer.add_images("test", np_images, epoch, dataformats="NHWC")
+-                if tracker.name == "wandb":
+-                    tracker.log(
+-                        {
+-                            "test": [
+-                                wandb.Image(image, caption=f"{i}: {args.validation_prompt}")
+-                                for i, image in enumerate(images)
+-                            ]
+-                        }
+-                    )
++        if accelerator.is_main_process:
++            for tracker in accelerator.trackers:
++                if len(images) != 0:
++                    if tracker.name == "tensorboard":
++                        np_images = np.stack([np.asarray(img) for img in images])
++                        tracker.writer.add_images("test", np_images, epoch, dataformats="NHWC")
++                    if tracker.name == "wandb":
++                        tracker.log(
++                            {
++                                "test": [
++                                    wandb.Image(image, caption=f"{i}: {args.validation_prompt}")
++                                    for i, image in enumerate(images)
++                                ]
++                            }
++                        )
+ 
+     accelerator.end_training()
+ 
