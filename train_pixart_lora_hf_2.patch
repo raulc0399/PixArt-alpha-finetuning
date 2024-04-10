@@ -1,5 +1,5 @@
 diff --git a/train_scripts/train_pixart_lora_hf.py b/train_scripts/train_pixart_lora_hf.py
-index 96acf29..18bc2dc 100644
+index 96acf29..622e255 100644
 --- a/train_scripts/train_pixart_lora_hf.py
 +++ b/train_scripts/train_pixart_lora_hf.py
 @@ -21,6 +21,7 @@ import os
@@ -69,6 +69,15 @@ index 96acf29..18bc2dc 100644
      transformer.print_trainable_parameters()
  
      # 10. Handle saving and loading of checkpoints
+@@ -907,7 +927,7 @@ def main():
+                 break
+ 
+         if accelerator.is_main_process:
+-            if args.validation_prompt is not None and epoch % args.validation_epochs == 0:
++            if args.validation_prompt is not None and (epoch + 1) % args.validation_epochs == 0:
+                 logger.info(
+                     f"Running validation... \n Generating {args.num_validation_images} images with prompt:"
+                     f" {args.validation_prompt}."
 @@ -966,42 +986,43 @@ def main():
                  ignore_patterns=["step_*", "epoch_*"],
              )

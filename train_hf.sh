@@ -22,7 +22,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --train_data_dir="../data/train/" --caption_column="orig_text" \
   --resolution=512 --random_flip \
   --train_batch_size=2 --gradient_accumulation_steps=4 \
-  --num_train_epochs=75 --checkpointing_steps=500 \
+  --num_train_epochs=4 --checkpointing_steps=15 \
   --learning_rate=1e-06 --lr_scheduler="constant" --lr_warmup_steps=50 \
   --seed=42 \
   --output_dir="pixart-simpson-model" \
@@ -31,7 +31,8 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --validation_epochs=1000 \
   --validation_prompt="cute dragon creature" \
   --rank=16 \
-  --use_8bit_adam
+  --use_8bit_adam \
+  --dataloader_num_workers=4
 
 # https://ngwaifoong92.medium.com/how-to-fine-tune-stable-diffusion-using-lora-85690292c6a8
 # https://huggingface.co/docs/diffusers/v0.27.2/en/training/text2image
