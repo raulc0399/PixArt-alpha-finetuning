@@ -27,9 +27,10 @@ def get_default_pipeline():
     return pipe
 
 def get_lora_pipeline():
-    transformer = Transformer2DModel.from_pretrained(MODEL_ID, subfolder="transformer", torch_dtype=torch.float16, device_map="auto")
-    transformer = PeftModel.from_pretrained(transformer, paths.get_peft_folder(), device_map="auto")
-    pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, transformer=transformer, torch_dtype=torch.float16, device_map="auto")
+    transformer = Transformer2DModel.from_pretrained(MODEL_ID, subfolder="transformer", torch_dtype=torch.float16)
+    transformer = PeftModel.from_pretrained(transformer, paths.get_peft_folder())
+    pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, transformer=transformer, torch_dtype=torch.float16)
+    pipe.to("cuda")
 
     del transformer
     torch.cuda.empty_cache()
@@ -57,19 +58,20 @@ def generate_images(pipe, prefix):
         os.mkdir(output_dir)
 
     current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    for i, prompt in enumerate(prompts):
-        image = pipe(prompt, num_inference_steps=20).images[0]    
+    with torch.autocast("cuda", dtype=torch.float16):
+        for i, prompt in enumerate(prompts):
+            image = pipe(prompt, num_inference_steps=20).images[0]    
 
-        file_name = os.path.join(output_dir, f"{current_time}_{prefix}_img_{i}")
+            file_name = os.path.join(output_dir, f"{current_time}_{prefix}_img_{i}")
 
-        info_json = {
-            "prompt": prompt,
-            "model_id": MODEL_ID,
-        }
-        with open(f"{file_name}.json", "w") as json_file:
-            json.dump(info_json, json_file)
-        
-        image.save(f"{file_name}.png")
+            info_json = {
+                "prompt": prompt,
+                "model_id": MODEL_ID,
+            }
+            with open(f"{file_name}.json", "w") as json_file:
+                json.dump(info_json, json_file)
+            
+            image.save(f"{file_name}.png")
 
 if __name__ == "__main__":
     if False:
