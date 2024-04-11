@@ -58,20 +58,19 @@ def generate_images(pipe, prefix):
         os.mkdir(output_dir)
 
     current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    with torch.autocast("cuda", dtype=torch.float16):
-        for i, prompt in enumerate(prompts):
-            image = pipe(prompt, num_inference_steps=20).images[0]    
+    for i, prompt in enumerate(prompts):
+        image = pipe(prompt, num_inference_steps=20).images[0]    
 
-            file_name = os.path.join(output_dir, f"{current_time}_{prefix}_img_{i}")
+        file_name = os.path.join(output_dir, f"{current_time}_{prefix}_img_{i}")
 
-            info_json = {
-                "prompt": prompt,
-                "model_id": MODEL_ID,
-            }
-            with open(f"{file_name}.json", "w") as json_file:
-                json.dump(info_json, json_file)
-            
-            image.save(f"{file_name}.png")
+        info_json = {
+            "prompt": prompt,
+            "model_id": MODEL_ID,
+        }
+        with open(f"{file_name}.json", "w") as json_file:
+            json.dump(info_json, json_file)
+        
+        image.save(f"{file_name}.png")
 
 if __name__ == "__main__":
     if False:
