@@ -25,7 +25,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --num_train_epochs=50 --checkpointing_steps=100 \
   --learning_rate=1e-06 --lr_scheduler="constant" --lr_warmup_steps=50 \
   --seed=42 \
-  --output_dir="pixart-simpson-model" \
+  --output_dir="pixart-simpsons-model" \
   --report_to="tensorboard" \
   --gradient_checkpointing --checkpoints_total_limit=10 \
   --validation_epochs=1000 \
