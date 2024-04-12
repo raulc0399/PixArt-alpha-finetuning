@@ -23,15 +23,15 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --resolution=512 --random_flip \
   --train_batch_size=2 --gradient_accumulation_steps=4 \
   --num_train_epochs=50 --checkpointing_steps=100 \
-  --learning_rate=1e-06 --lr_scheduler="constant" --lr_warmup_steps=50 \
+  --learning_rate=1e-05 --lr_scheduler="constant" --lr_warmup_steps=100 \
   --seed=42 \
   --output_dir="pixart-simpsons-model" \
   --report_to="tensorboard" \
   --gradient_checkpointing --checkpoints_total_limit=10 \
   --validation_epochs=1000 \
   --validation_prompt="cute dragon creature" \
-  --rank=16 \
-  --use_8bit_adam \
+  --rank=4 \
+  --adam_weight_decay=0.03 --adam_epsilon=1e-10 \
   --dataloader_num_workers=4
 
 # https://ngwaifoong92.medium.com/how-to-fine-tune-stable-diffusion-using-lora-85690292c6a8
