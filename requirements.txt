@@ -14,4 +14,4 @@ peft
 torch
 torchvision
 datasets
-tensorboard
+wandb

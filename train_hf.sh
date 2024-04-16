@@ -26,7 +26,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --learning_rate=1e-05 --lr_scheduler="constant" --lr_warmup_steps=100 \
   --seed=42 \
   --output_dir="pixart-simpsons-model" \
-  --report_to="tensorboard" \
+  --report_to="wandb" \
   --gradient_checkpointing --checkpoints_total_limit=10 \
   --validation_epochs=1000 \
   --validation_prompt="cute dragon creature" \
