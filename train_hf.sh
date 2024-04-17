@@ -22,8 +22,8 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --train_data_dir="../data/train/" --caption_column="orig_text" \
   --resolution=512 --random_flip \
   --train_batch_size=2 --gradient_accumulation_steps=4 \
-  --num_train_epochs=150 --checkpointing_steps=100 \
-  --learning_rate=1e-05 --lr_scheduler="constant" --lr_warmup_steps=100 \
+  --num_train_epochs=100 --checkpointing_steps=100 \
+  --learning_rate=1e-04 --lr_scheduler="constant" --lr_warmup_steps=100 \
   --seed=42 \
   --output_dir="pixart-simpsons-model" \
   --report_to="wandb" \
