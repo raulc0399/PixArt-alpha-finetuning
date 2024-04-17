@@ -32,7 +32,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --validation_prompt="cute dragon creature" \
   --rank=4 \
   --adam_weight_decay=0.03 --adam_epsilon=1e-10 \
-  --dataloader_num_workers=4
+  --dataloader_num_workers=8
 
 # https://ngwaifoong92.medium.com/how-to-fine-tune-stable-diffusion-using-lora-85690292c6a8
 # https://huggingface.co/docs/diffusers/v0.27.2/en/training/text2image
