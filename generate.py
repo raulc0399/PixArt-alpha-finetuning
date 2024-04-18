@@ -50,7 +50,7 @@ def generate_images(pipe, prefix):
         # "cartoon-like illustration of a crowd of people at a concert"
 
         "simpsons fishing",
-        "A family of four, with two parents and two children, having a picnic in a park."
+        "A family of four, with two parents and two children, having a picnic in a park.",
 
         # from the training set:
         "The image is a cartoon depiction of the Simpsons family, consisting of Homer, Marge, Bart, and Lisa. They are walking through a park, enjoying a day outdoors.",
