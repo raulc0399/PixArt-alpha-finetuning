@@ -33,7 +33,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --rank=4 \
   --adam_weight_decay=0.03 --adam_epsilon=1e-10 \
   --dataloader_num_workers=8 \
-  # --snr_gamma=1.0
+  --snr_gamma=1.0
   # --use_rslora
   # --use_dora
 
