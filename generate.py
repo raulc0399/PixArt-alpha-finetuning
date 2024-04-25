@@ -29,7 +29,11 @@ def get_default_pipeline():
 
 def get_lora_pipeline():
     transformer = Transformer2DModel.from_pretrained(MODEL_ID, subfolder="transformer", torch_dtype=torch.float16)
-    transformer = PeftModel.from_pretrained(transformer, paths.get_peft_folder())
+
+    # perf_ckpt = paths.get_peft_folder()
+    perf_ckpt = os.path.join(paths.get_peft_folder(), "checkpoint-7300")
+
+    transformer = PeftModel.from_pretrained(transformer, perf_ckpt)
     pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, transformer=transformer, torch_dtype=torch.float16)
     pipe.to("cuda")
 
