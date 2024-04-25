@@ -59,9 +59,8 @@ def generate_images(pipe, prefix):
         "Image in the style of simpsons cartoons, a family on a fishing trip. The father is holding a fishing rod, the mother is sitting on a picnic blanket, and the children are playing with a toy boat in a pond. The sun is shining, and there are trees and flowers in the background.",
         "Image in the style of simpsons cartoons, A family of four, with two parents and two children, having a picnic in a park.",
 
-        # from the training set:
         "Image in the style of simpsons cartoons, a family, consisting of father, mother and one girl and one boy. They are walking through a park, enjoying a day outdoors.",
-        "ThImage in the style of simpsons cartoons, a man wearing a tie and holding a cup. He is standing in front of a suitcase, which is open and has papers inside. The man appears to be a character from the popular animated show \"The Simpsons.\" The scene is set in a dark room, with the man being the main focus of the image."
+        "Image in the style of simpsons cartoons, a man wearing a tie and holding a cup. He is standing in front of a suitcase, which is open and has papers inside. The man appears to be a character from the popular animated show \"The Simpsons.\" The scene is set in a dark room, with the man being the main focus of the image."
     ]
 
     output_dir = "./generated/"
