@@ -31,7 +31,7 @@ def get_lora_pipeline():
     transformer = Transformer2DModel.from_pretrained(MODEL_ID, subfolder="transformer", torch_dtype=torch.float16)
 
     perf_ckpt = paths.get_peft_folder()
-    # perf_ckpt = os.path.join(paths.get_peft_folder(), "checkpoint-7300")
+    # perf_ckpt = os.path.join(perf_ckpt, "checkpoint-7100")
 
     transformer = PeftModel.from_pretrained(transformer, perf_ckpt)
     pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, transformer=transformer, torch_dtype=torch.float16)
