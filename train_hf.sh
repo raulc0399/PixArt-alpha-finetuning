@@ -31,7 +31,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --gradient_checkpointing \
   --validation_epochs=5 \
   --validation_prompt="Image in the style of simpsons cartoons, cute dragon creature" \
-  --rank=16 \
+  --rank=8 \
   --adam_weight_decay=0.03 --adam_epsilon=1e-10 \
   --dataloader_num_workers=8
   # --snr_gamma=1.0
