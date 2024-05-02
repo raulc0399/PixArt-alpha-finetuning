@@ -19,7 +19,7 @@ def get_metadata_file_path():
 def get_train_folder():
     return train_folder
 
-def get_peft_folder():
-    peft_folder = os.path.join(this_dir, "pixart-simpsons-model")
+def get_transformer_peft_folder():
+    peft_folder = os.path.join(this_dir, "pixart-simpsons-model/transformer")
     
     return peft_folder
