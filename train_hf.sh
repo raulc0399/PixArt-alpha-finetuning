@@ -22,8 +22,9 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --train_data_dir="../data/train/" --caption_column="llava_caption_with_orig_caption" \
   --resolution=512 \
   --train_batch_size=2 --gradient_accumulation_steps=1 \
-  --num_train_epochs=100 --checkpointing_steps=100 \
+  --num_train_epochs=100 --checkpointing_steps=500 \
   --max_train_samples=400 \
+  --checkpoints_total_limit=30 \
   --learning_rate=3e-04 --lr_scheduler="cosine" --lr_warmup_steps=0 \
   --seed=42 \
   --output_dir="pixart-simpsons-model" \
@@ -35,7 +36,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --adam_weight_decay=0.03 --adam_epsilon=1e-10 \
   --dataloader_num_workers=8 \
   --train_text_encoder
-  # --snr_gamma=1.0
+    # --snr_gamma=1.0
   # --use_rslora
   # --use_dora
 
