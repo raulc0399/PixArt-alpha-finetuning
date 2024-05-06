@@ -17,7 +17,7 @@
 
 # remove the validation_epochs or set it to a lower number if you want to run the validation prompt
 # validation will be ran at the end
-accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train_scripts/train_pixart_lora_hf.py --mixed_precision="fp16" \
+accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train_scripts/train_pixart_lora_hf.py --mixed_precision="bf16" \
   --pretrained_model_name_or_path=PixArt-alpha/PixArt-XL-2-512x512 \
   --train_data_dir="../data/train/" --caption_column="llava_caption_with_orig_caption" \
   --resolution=512 \
