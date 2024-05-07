@@ -51,29 +51,34 @@ def get_lora_pipeline():
 
     return pipe
 
+def generate_image(pipe, prompt, i, current_time, prefix, output_dir):
+    image = pipe(prompt, num_inference_steps=20).images[0]
+
+    file_name = os.path.join(output_dir, f"{current_time}_{prefix}_img_{i}")
+
+    info_json = {
+        "prompt": prompt,
+        "model_id": MODEL_ID,
+    }
+    with open(f"{file_name}.json", "w") as json_file:
+        json.dump(info_json, json_file)
+    
+    image.save(f"{file_name}.png")
+
 def generate_images(pipe, prefix):
     prompts = [
-        # "A small cactus with a happy face in the Sahara desert.",
-        # "cute dragon creature",
-        # "A family of four, with two parents and two children, having a picnic in a park. The sun is shining brightly, and there's a picnic basket filled with food. The family is sitting on a checkered blanket, laughing and enjoying their time together.",
-        # "A scientist working in a lab filled with futuristic gadgets and machines. The scientist is holding a test tube with a glowing liquid, and there's a robot assistant helping him in the background. The lab has large windows showing a cityscape outside.",
-        # "A group of friends at a bowling alley. They are taking turns bowling, with one person about to release the ball down the lane. There's excitement and competition in the air, and the scoreboard shows a close game.",
-        # "A classroom scene with a teacher and students. The teacher is standing in front of a blackboard, explaining a complex math problem, while the students are listening intently, some scratching their heads and others taking notes.",
-        "Image in the style of simpsons cartoons, A musician playing a guitar on stage at a rock concert. The crowd is cheering and waving their hands in the air, with lights flashing and a disco ball spinning overhead. The musician is passionately performing a solo, lost in the music.",
-        # "cartoon-like illustration of a crowd of people at a concert"
-
-        "simpsons fishing",
-        "Image in the style of simpsons cartoons, A family of four, with two parents and two children, having a picnic in a park.",
-
-        # from the training set:
-        "The image is a cartoon depiction of the Simpsons family, consisting of Homer, Marge, Bart, and Lisa. They are walking through a park, enjoying a day outdoors.",
-        "The image is a cartoon-style drawing of a man wearing a tie and holding a cup. He is standing in front of a suitcase, which is open and has papers inside. The man appears to be a character from the popular animated show \"The Simpsons.\" The scene is set in a dark room, with the man being the main focus of the image.",
-
-        "Image in the style of simpsons cartoons, a family on a fishing trip. The father is holding a fishing rod, the mother is sitting on a picnic blanket, and the children are playing with a toy boat in a pond. The sun is shining, and there are trees and flowers in the background.",
-        "Image in the style of simpsons cartoons, A family of four, with two parents and two children, having a picnic in a park.",
-
-        "Image in the style of simpsons cartoons, a family, consisting of father, mother and one girl and one boy. They are walking through a park, enjoying a day outdoors.",
-        "Image in the style of simpsons cartoons, a man wearing a tie and holding a cup. He is standing in front of a suitcase, which is open and has papers inside. The man appears to be a character from the popular animated show \"The Simpsons.\" The scene is set in a dark room, with the man being the main focus of the image."
+        "beautiful lady, freckles, big smile, blue eyes, short ginger hair, dark makeup, wearing a floral blue vest top, soft light, dark grey background",
+        "friends hanging out on a beautiful summer evening, beach bar.",
+        "teacher explaining, in fun and entertaining way, physics to a group of interested kids.",
+        "crowd at a concert, enjoying the music and the atmosphere.",
+        "a small cactus with a happy face in the Sahara desert.",
+        "professional portrait photo of an anthropomorphic cat wearing fancy gentleman hat and jacket walking in autumn forest.",
+        "cute dragon creature",
+        "a very beautiful and colorful bird",
+        "a cute little puppy",
+        "a big football stadium",
+        "a house in a modern city on a sunny day",
+        "Pirate ship trapped in a cosmic maelstrom nebula, rendered in cosmic beach whirlpool engine, volumetric lighting, spectacular, ambient lights, light pollution, cinematic atmosphere, art nouveau style, illustration art artwork by SenseiJaye, intricate detail."
     ]
 
     output_dir = "./generated/"
@@ -82,21 +87,15 @@ def generate_images(pipe, prefix):
 
     current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     for i, prompt in enumerate(prompts):
-        image = pipe(prompt, num_inference_steps=20).images[0]    
+        generate_image(pipe, prompt, i, current_time, prefix, output_dir)
 
-        file_name = os.path.join(output_dir, f"{current_time}_{prefix}_img_{i}")
+        if prefix == "lora":
+            prompt = f"Image in the style of simpsons cartoons, {prompt}"
 
-        info_json = {
-            "prompt": prompt,
-            "model_id": MODEL_ID,
-        }
-        with open(f"{file_name}.json", "w") as json_file:
-            json.dump(info_json, json_file)
-        
-        image.save(f"{file_name}.png")
+            generate_image(pipe, prompt, i, current_time, f"{prefix}_w_trigger", output_dir)
 
 if __name__ == "__main__":
-    if False:
+    if True:
         pipe = get_default_pipeline()
         generate_images(pipe, "default")
 
