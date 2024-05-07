@@ -36,6 +36,7 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --adam_weight_decay=0.03 --adam_epsilon=1e-10 \
   --dataloader_num_workers=8 \
   --train_text_encoder --text_encoder_learning_rate=5e-05 \
+  --text_encoder_stop_at_percentage_steps=0.2 \
     # --snr_gamma=1.0
   # --use_rslora
   # --use_dora
