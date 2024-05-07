@@ -23,3 +23,8 @@ def get_transformer_peft_folder():
     peft_folder = os.path.join(this_dir, "pixart-simpsons-model/transformer")
     
     return peft_folder
+
+def get_text_encoder_peft_folder():
+    peft_folder = os.path.join(this_dir, "pixart-simpsons-model/text_encoder")
+    
+    return peft_folder

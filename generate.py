@@ -1,5 +1,6 @@
 import torch
-from diffusers import PixArtAlphaPipeline, ConsistencyDecoderVAE, AutoencoderKL, Transformer2DModel
+from diffusers import PixArtAlphaPipeline, Transformer2DModel
+from transformers import T5EncoderModel
 from peft import PeftModel
 import datetime
 import json
@@ -34,11 +35,19 @@ def get_lora_pipeline():
     # perf_ckpt = os.path.join(perf_ckpt, "checkpoint-7100")
 
     transformer = PeftModel.from_pretrained(transformer, perf_ckpt)
-    pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, transformer=transformer, torch_dtype=torch.float16)
+
+    text_encoder = T5EncoderModel.from_pretrained(MODEL_ID, subfolder='text_encoder', torch_dtype=torch.float16)
+    text_encoder = PeftModel.from_pretrained(text_encoder, paths.get_text_encoder_peft_folder())
+    
+    pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, 
+                                               transformer=transformer,
+                                               text_encoder=text_encoder,
+                                               torch_dtype=torch.float16)
     pipe.to("cuda")
 
-    del transformer
-    torch.cuda.empty_cache()
+    # del transformer
+    # del text_encoder
+    # torch.cuda.empty_cache()
 
     return pipe
 
