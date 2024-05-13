@@ -1,3 +1,10 @@
+# make sure that when starting the pod, the container volume has enough space to download the data
+# hf will use /root/.cache/ as default cache (which is in the temp volume)
+# alternatively, change it using:
+# huggingface-cli env set HF_HOME /workspace/.cache/huggingface
+# verify with:
+# huggingface-cli scan-cache
+
 apt-get update
 apt-get install vim
 apt-get install tmux
@@ -30,4 +37,4 @@ chmod +x ./train_hf.sh
 ./train_hf.sh
 
 # in a 2nd termnal (Ctrl+b, c to create a new terminal)
-watch -d -n 0.5 nvidia-smi
+watch -n 0.5 nvidia-smi
