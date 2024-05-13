@@ -17,7 +17,7 @@ prompt_for_caption = "Describe this image and its style in a very detailed manne
 # specify if the image contains one or more persons, animals, or objects, detail each of them, for persons and animals specify their emotions, actions, and interactions as well as if they are adults or children.
 # """
 prompt_for_caption_with_caption = """Give the caption of this image '{caption}', describe this image and its style in a very detailed manner,
-start all with 'Image lego city adventures style, ', do not use the name of the characters in the description.
+start all with 'Image in lego city adventures style, ', do not use the name of the characters in the description.
 specify if the image contains one or more persons, animals, or objects, detail each of them, for persons and animals specify their emotions, actions, and interactions as well as if they are adults or children.
 """
 
