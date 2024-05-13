@@ -1,0 +1,33 @@
+apt-get update
+apt-get install vim
+apt-get install tmux
+
+cd /workspace
+
+wget https://github.com/Oxen-AI/Oxen/releases/download/v0.15.7/oxen-ubuntu-latest-0.15.7.deb
+dpkg -i oxen-ubuntu-latest-0.15.7.deb
+rm oxen-ubuntu-latest-0.15.7.deb
+
+mkdir data
+cd data
+oxen clone https://hub.oxen.ai/raulc/lego-city-adventures-captions
+
+cd /workspace
+
+git clone https://github.com/raulc0399/PixArt-alpha-finetuning.git
+cd PixArt-alpha-finetuning
+git clone https://github.com/PixArt-alpha/PixArt-alpha.git
+
+pip install -r ./requirements.txt
+
+wandb login
+
+# for accelerate all default options can be confirmed with enter
+accelerate config
+
+tmux
+chmod +x ./train_hf.sh
+./train_hf.sh
+
+# in a 2nd termnal (Ctrl+b, c to create a new terminal)
+watch -d -n 0.5 nvidia-smi
