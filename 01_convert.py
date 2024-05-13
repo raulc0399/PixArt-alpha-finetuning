@@ -7,11 +7,11 @@ file1_path, file2_path = paths.get_input_files_paths()
 output_folder = paths.get_train_folder()
 metadata_file_path = paths.get_metadata_file_path()
 
-# df1 = pd.read_parquet(file1_path)
-df2 = pd.read_parquet(file2_path)
+df1 = pd.read_parquet(file1_path)
+# df2 = pd.read_parquet(file2_path)
 
 # Merge the two dataframes and save the as HF imagefolder - in fine-tuning, only one text column is needed, but we will save also the text from recaptioning
-merged_df = df2 # pd.concat([df1, df2], ignore_index=True)
+merged_df = df1 # pd.concat([df1, df2], ignore_index=True)
 
 metadata = []
 for idx, row in merged_df.iterrows():
