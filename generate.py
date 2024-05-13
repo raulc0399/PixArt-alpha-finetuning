@@ -36,12 +36,12 @@ def get_lora_pipeline():
 
     transformer = PeftModel.from_pretrained(transformer, perf_ckpt)
 
-    text_encoder = T5EncoderModel.from_pretrained(MODEL_ID, subfolder='text_encoder', torch_dtype=torch.float16)
-    text_encoder = PeftModel.from_pretrained(text_encoder, paths.get_text_encoder_peft_folder())
+    # text_encoder = T5EncoderModel.from_pretrained(MODEL_ID, subfolder='text_encoder', torch_dtype=torch.float16)
+    # text_encoder = PeftModel.from_pretrained(text_encoder, paths.get_text_encoder_peft_folder())
     
     pipe = PixArtAlphaPipeline.from_pretrained(MODEL_ID, 
                                                transformer=transformer,
-                                               text_encoder=text_encoder,
+                                            #    text_encoder=text_encoder,
                                                torch_dtype=torch.float16)
     pipe.to("cuda")
 
@@ -89,10 +89,10 @@ def generate_images(pipe, prefix):
     for i, prompt in enumerate(prompts):
         generate_image(pipe, prompt, i, current_time, prefix, output_dir)
 
-        if prefix == "lora":
-            prompt = f"Image in the style of simpsons cartoons, {prompt}"
+        # prompt = f"Image in the style of simpsons cartoons, {prompt}"
+        prompt = f"Image in lego city adventures style, {prompt}"
 
-            generate_image(pipe, prompt, i, current_time, f"{prefix}_w_trigger", output_dir)
+        generate_image(pipe, prompt, i, current_time, f"{prefix}_w_trigger", output_dir)
 
 if __name__ == "__main__":
     if True:
