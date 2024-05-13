@@ -1,15 +1,9 @@
 #!/bin/bash
 
-# clone original repo and then run the training script
+# clone the PixArt-alpha repo in this folder
 # git clone https://github.com/PixArt-alpha/PixArt-alpha.git
 
-# the patch loads the vae and tokenizer directly in fp16 on GPU - also the training of the transformers gives an error if using fp16, so that is removed
-# to apply the patch:
-# cp train_pixart_lora_hf.patch PixArt-alpha
-# cd PixArt-alpha
-# git apply train_pixart_lora_hf.patch
-
-# also run
+# run
 # accelerate config
 
 # check with
@@ -34,10 +28,10 @@ accelerate launch --num_processes=1 --main_process_port=36667 PixArt-alpha/train
   --validation_prompt="Image in the style of simpsons cartoons, cute dragon creature" \
   --rank=16 \
   --adam_weight_decay=0.03 --adam_epsilon=1e-10 \
-  --dataloader_num_workers=8 \
-  --train_text_encoder --text_encoder_learning_rate=5e-05 \
-  --text_encoder_stop_at_percentage_steps=0.2 \
-    # --snr_gamma=1.0
+  --dataloader_num_workers=8
+  # --train_text_encoder --text_encoder_learning_rate=5e-05 \
+  # --text_encoder_stop_at_percentage_steps=0.2 \
+  # --snr_gamma=1.0
   # --use_rslora
   # --use_dora
 
