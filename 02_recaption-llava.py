@@ -12,8 +12,12 @@ metadata_file_path = paths.get_metadata_file_path()
 
 # https://arxiv.org/pdf/2310.00426.pdf, Fig. 10
 prompt_for_caption = "Describe this image and its style in a very detailed manner"
+# prompt_for_caption_with_caption = """Give the caption of this image '{caption}', describe this image and its style in a very detailed manner,
+# start all with 'Image in the style of simpsons cartoons, ', do not use the name simpsons in the description, do not use the name of the characters in the description.
+# specify if the image contains one or more persons, animals, or objects, detail each of them, for persons and animals specify their emotions, actions, and interactions as well as if they are adults or children.
+# """
 prompt_for_caption_with_caption = """Give the caption of this image '{caption}', describe this image and its style in a very detailed manner,
-start all with 'Image in the style of simpsons cartoons, ', do not use the name simpsons in the description, do not use the name of the characters in the description.
+start all with 'Image lego city adventures style, ', do not use the name of the characters in the description.
 specify if the image contains one or more persons, animals, or objects, detail each of them, for persons and animals specify their emotions, actions, and interactions as well as if they are adults or children.
 """
 
