@@ -7,6 +7,10 @@ file1_path, file2_path = paths.get_input_files_paths()
 output_folder = paths.get_train_folder()
 metadata_file_path = paths.get_metadata_file_path()
 
+# Create folders if they don't exist
+os.makedirs(output_folder, exist_ok=True)
+os.makedirs(os.path.dirname(metadata_file_path), exist_ok=True)
+
 df1 = pd.read_parquet(file1_path)
 # df2 = pd.read_parquet(file2_path)
 
