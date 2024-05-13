@@ -2,7 +2,7 @@ import os
 
 this_dir = os.path.dirname(__file__)
 datasets_dir = os.path.join(this_dir, "../data/input/")
-train_folder = os.path.join(this_dir, "../data/train/")
+train_folder = os.path.join(this_dir, "../data/lego-city-adventures-captions/")
 
 # peft_model_folder = "pixart-simpsons-model"
 peft_model_folder = "lego-city-adventure-model"
